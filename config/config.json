@@ -1,0 +1,8 @@
+{
+  "train_times": 5,
+  "lr": 0.05,
+  "word_dim": 128,
+  "batch_size": 5000,
+  "window_size": 3,
+  "min_count": 2
+}
