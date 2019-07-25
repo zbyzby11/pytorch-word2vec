@@ -2,6 +2,8 @@
 skip-gram model
 @date 2019.7.25
 """
+import json
+
 import torch as t
 import torch.nn.functional as F
 from torch import nn
@@ -55,4 +57,12 @@ class model(nn.Module):
         score = -(t.sum(pos_score) + t.sum(neg_score))
         return score
 
-    # todo:保存训练好的词向量
+    def save(self, use_cuda, outputfile):
+        f = open(outputfile, 'w', encoding='utf8')
+        if use_cuda:
+            word_embedding = self.u.weight.cpu().data.numpy().tolist()
+        else:
+            word_embedding = self.u.weight.data.numpy().tolist()
+        assert len(word_embedding) == self.emb_size
+        f.write(json.dumps(word_embedding, ensure_ascii=False))
+        f.close()

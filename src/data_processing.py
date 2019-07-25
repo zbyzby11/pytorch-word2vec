@@ -2,6 +2,7 @@
 将data目录中的语料进行预处理
 @data 2019.7.24
 """
+import json
 
 
 def create_dict(input_file, min_count):
@@ -12,6 +13,7 @@ def create_dict(input_file, min_count):
     :param min_count:过滤掉词的最小值
     :return: 两个字典
     """
+    stop_word = [i.strip() for i in open('../data/stopword.txt', 'r', encoding='utf8')]
     f = open(input_file, 'r', encoding='utf8')
     word_frequency = dict()
     word2id = dict()
@@ -27,12 +29,20 @@ def create_dict(input_file, min_count):
     for line in f:
         word_list = line.strip().split(' ')
         for word in word_list:
-            if word not in word2id and word_frequency[word] > min_count:
+            if word not in word2id and word_frequency[word] > min_count and word not in stop_word:
                 word2id[word] = len(word2id)
 
     for word, id in word2id.items():
         id2word[id] = word
+    f.close()
 
+    f = open('../dict/word2id_dict.json', 'w', encoding='utf8')
+    f.write(json.dumps(word2id, ensure_ascii=False, indent=4))
+    f.close()
+
+    f = open('../dict/id2word_dict.json', 'w', encoding='utf8')
+    f.write(json.dumps(id2word, ensure_ascii=False, indent=4))
+    f.close()
     return word2id, id2word
 
 

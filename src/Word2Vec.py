@@ -26,10 +26,9 @@ class Word2Vec(object):
         self.window_size = window_size
         self.inputfile = inputfile
         self.word2id, self.id2word = create_dict(self.inputfile, min_count)
-        # print(len(self.word2id))
         # 中心词和上下文列表
         self.center_context_list = self.get_center_w()
-        print(len(self.center_context_list))
+        # print(len(self.center_context_list))
         # 词向量的个数
         self.emb_size = len(self.word2id)
         # 词向量的维度
@@ -115,9 +114,11 @@ class Word2Vec(object):
         return neg_v
 
     def train(self):
-        for epoch in range(self.train_times + 1):
+        print("training time is: ", self.train_times)
+        print("word count is: ", len(self.word2id))
+        for epoch in range(self.train_times):
             process_bar = range(self.num_batch)
-            print('step:',self.num_batch)
+            print('train step is: ', self.num_batch)
             for i in process_bar:
                 pos_u, pos_v, index_tuple = self.get_pos_pairs(i)
                 neg_v = self.neg_sample(pos_u, index_tuple)
@@ -135,6 +136,9 @@ class Word2Vec(object):
                 self.optimizer.step()
                 print(str(datetime.datetime.now()) + '||epoch ' + str(epoch + 1) + '||step ' + str(
                     i + 1) + ' | loss is: ' + str(loss.item()))
+        print("----start saving embeddings----")
+        self.skip_gram.save(self.use_cuda, self.outputfile)
+        print("saving embeddings is success!")
 
 
 if __name__ == '__main__':
