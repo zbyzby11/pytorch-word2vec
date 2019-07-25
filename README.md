@@ -2,6 +2,7 @@
 
 这个仓库是word2vec中skip-gram模型的pytorch实现
 
+
 以下命令来运行程序：
 
     cd src
